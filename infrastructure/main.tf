@@ -199,7 +199,7 @@ resource "aws_iam_instance_profile" "prometheus_discovery_profile" {
 resource "aws_instance" "prometheus_server" {
   ami                  = data.aws_ami.amazon_linux_2023.id
   instance_type        = "t3.micro"
-  key_name             = "my-aws-key" 
+  key_name             = "RobBastion" 
   vpc_security_group_ids = [aws_security_group.prometheus_sg.id]
   iam_instance_profile = aws_iam_instance_profile.prometheus_discovery_profile.name
 
@@ -278,7 +278,7 @@ resource "aws_instance" "prometheus_server" {
 resource "aws_instance" "victim_server" {
   ami           = data.aws_ami.amazon_linux_2023.id
   instance_type = "t3.micro" 
-  key_name      = "my-aws-key" 
+  key_name      = "RobBastion" 
   vpc_security_group_ids = [aws_security_group.victim_sg.id]
 
   tags = {
