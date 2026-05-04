@@ -103,6 +103,14 @@ resource "aws_security_group" "victim_sg" {
   name        = "victim-server-sg"
   description = "Allow HTTP for Load Test, restricted Prometheus scraping"
 
+# Allow Local Prometheus to scrape Node Exporter
+  ingress {
+    description = "Local Mac Prometheus Scraper"
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["65.35.126.205/32"] 
+  }
   ingress {
     description = "Allow HTTP for Load Test"
     from_port   = 80
