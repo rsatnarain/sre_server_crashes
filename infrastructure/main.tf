@@ -182,7 +182,10 @@ resource "aws_iam_role_policy" "prometheus_discovery_policy" {
                          "ec2:DescribeTags",
                          "cloudwatch:GetMetricStatistics",
                          "cloudwatch:ListMetrics",
-                         "cloudwatch:GetMetricData"
+                         "cloudwatch:GetMetricData",
+                         "cloudwatch:DescribeAlarmsForMetric",
+                         "cloudwatch:DescribeAlarmHistory",
+                         "cloudwatch:DescribeAlarms"
                     ]
                     Resource = "*"
                }
