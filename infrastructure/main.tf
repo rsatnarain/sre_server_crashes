@@ -186,6 +186,26 @@ resource "aws_iam_role_policy" "prometheus_discovery_policy" {
      })
 }
 
+resource "aws_iam_role_policy" "sqs_worker_policy" {
+  name = "SQS-Worker-Policy"
+  role = aws_iam_role.prometheus_discovery_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Resource = aws_sqs_queue.user_request_queue.arn
+      }
+    ]
+  })
+}
+
 resource "aws_iam_instance_profile" "prometheus_discovery_profile" {
      name = "Prometheus-EC2-Discovery-Profile"
      role = aws_iam_role.prometheus_discovery_role.name
@@ -319,4 +339,21 @@ resource "aws_instance" "victim_server" {
               systemctl start node_exporter
               systemctl enable node_exporter
               EOF
+}
+
+# ====================================================
+# 4. SQS Queue - Solution to preventing a server crash
+# ====================================================
+
+resource "aws_sqs_queue" "user_request_queue" {
+  name                      = "user-request-queue"
+  delay_seconds             = 0
+  max_message_size          = 262144
+  message_retention_seconds = 345600 # 4 days
+  receive_wait_time_seconds = 10     # Long Polling
+  visibility_timeout_seconds = 30    # Keeps message hidden while being processed
+
+  tags = {
+    Name = "9am-Spike-Queue"
+  }
 }
