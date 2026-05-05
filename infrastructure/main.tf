@@ -5,6 +5,7 @@
 #
 # Updated By     Date       Version     Description
 # Rob Satnarain 2026-05-04  1.0         Initial creation - provider configuration
+# Rob Satnarain 2026-05-05  1.1         Updated prometheus role
 # =========================================================================================
 
 # =========================================================================================
@@ -179,6 +180,9 @@ resource "aws_iam_role_policy" "prometheus_discovery_policy" {
                     Action = [
                          "ec2:DescribeInstances",
                          "ec2:DescribeTags",
+                         "cloudwatch:GetMetricStatistics",
+                         "cloudwatch:ListMetrics",
+                         "cloudwatch:GetMetricData"
                     ]
                     Resource = "*"
                }
